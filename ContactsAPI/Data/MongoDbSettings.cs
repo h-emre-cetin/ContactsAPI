@@ -1,22 +1,22 @@
-﻿using MongoDB.Driver;
+﻿using ContactsAPI.Model;
+using MongoDB.Driver;
 
 namespace ContactsAPI.Data
 {
     public class MongoDbSettings
     {
         private readonly IConfiguration _configuration;
-        private readonly IMongoDatabase? _database;
+        private readonly IMongoDatabase _database;
 
         public MongoDbSettings(IConfiguration configuration)
         {
             _configuration = configuration;
 
             var connectionString = _configuration.GetConnectionString("DbConnection");
-            var mongoUrl = MongoUrl.Create(connectionString);
-            var mongoClient = new MongoClient(mongoUrl);
-            _database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
-        }
+            var databaseName = configuration.GetConnectionString("DatabaseName");
 
-        public IMongoDatabase? Database => _database;
+            var client = new MongoClient(connectionString);
+            _database = client.GetDatabase(databaseName);
+        }
     }
 }
